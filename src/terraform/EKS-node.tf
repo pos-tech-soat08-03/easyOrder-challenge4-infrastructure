@@ -14,9 +14,9 @@ resource "aws_eks_node_group" "node-group" {
   # Cada app tem 250m a 500m
   # Temos 3 apps e 3 banco
   scaling_config {
-    desired_size = 3  #(500*3)+(250*3) = 2250m = 2.25 vcpu
-    max_size     = 5  #(1000*3)+(500*3) = 4500m = 4.5 vcpu
-    min_size     = 2  #(500*3)+(250*3) = 2250m = 2.25 vcpu
+    desired_size = 3 #(500*3)+(250*3) = 2250m = 2.25 vcpu
+    max_size     = 5 #(1000*3)+(500*3) = 4500m = 4.5 vcpu
+    min_size     = 2 #(500*3)+(250*3) = 2250m = 2.25 vcpu
   }
 
 }
@@ -24,8 +24,8 @@ resource "aws_eks_node_group" "node-group" {
 module "metrics_server" {
   source = "git::https://github.com/DNXLabs/terraform-aws-eks-metrics-server.git"
 
-  enabled = true
-  helm_chart_repo = "https://charts.bitnami.com/bitnami"
+  enabled            = true
+  helm_chart_repo    = "https://charts.bitnami.com/bitnami"
   helm_chart_version = "5.9.2"
-  namespace = "easyorder"
+  namespace          = "easyorder"
 }
