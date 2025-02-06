@@ -5,7 +5,7 @@ resource "aws_eks_node_group" "node-group" {
   node_role_arn = data.aws_iam_role.labrole.arn
   subnet_ids    = module.vpc.private_subnets
 
-  #disk_size       = 50
+
   instance_types = [var.instanceType]
 
   scaling_config {
@@ -13,7 +13,11 @@ resource "aws_eks_node_group" "node-group" {
     max_size     = 4 #era 6
     min_size     = 1 #era 2
   }
-  # update_config {
-  #   max_unavailable = 1
-  # }
+
+}
+
+module "metrics_server" {
+  source = "git::https://github.com/DNXLabs/terraform-aws-eks-metrics-server.git"
+
+  enabled = true
 }
