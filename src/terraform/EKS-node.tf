@@ -25,4 +25,7 @@ module "metrics_server" {
   source = "git::https://github.com/DNXLabs/terraform-aws-eks-metrics-server.git"
 
   enabled = true
+  helm_chart_repo = "https://charts.bitnami.com/bitnami"
+  helm_chart_version = "5.9.2"
+  namespace = "easyorder"
 }
