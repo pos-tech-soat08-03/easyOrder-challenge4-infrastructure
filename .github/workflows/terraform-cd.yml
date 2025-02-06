@@ -4,10 +4,6 @@ name: Terraform CD - Deploy Infraestrutura
 on: 
   workflow_dispatch:
     inputs:
-      # environment:
-      #   description: 'Ambiente de deployment (ex.: lab, staging, prod)'
-      #   required: true
-      #   default: 'prod'
       aws_access_key_id:
         description: 'AWS Access Key ID'
         required: true
@@ -20,9 +16,6 @@ on:
       aws_account_id:
         description: 'AWS Account ID'
         required: true
-      # aws_backend_bucket:
-      #   description: 'AWS S3 Bucket para armazenamento do estado do Terraform'
-      #   required: true
       aws_region:
         description: 'AWS Region'
         required: true
