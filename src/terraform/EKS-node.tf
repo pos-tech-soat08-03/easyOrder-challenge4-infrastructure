@@ -4,8 +4,8 @@ resource "aws_eks_node_group" "node-group" {
 
   node_role_arn = data.aws_iam_role.labrole.arn
   subnet_ids    = module.vpc.private_subnets
- 
- 
+
+
   instance_types = [var.instanceType]
 
   scaling_config {
