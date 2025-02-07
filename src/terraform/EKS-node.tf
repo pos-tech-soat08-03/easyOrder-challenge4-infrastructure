@@ -21,11 +21,17 @@ resource "aws_eks_node_group" "node-group" {
 
 }
 
-module "metrics_server" {
-  source = "git::https://github.com/DNXLabs/terraform-aws-eks-metrics-server.git"
+resource "helm_release" "metrics_server" {
+    name = "metrics-server"
 
-  enabled            = true
-  helm_chart_repo    = "https://charts.bitnami.com/bitnami"
-  helm_chart_version = "5.9.2"
-  namespace          = "easyorder"
+    repository       = "https://charts.bitnami.com/bitnami"
+    chart            = "metrics-server"
+    namespace        = "metrics-server"
+    version          = "7.3.4"
+    create_namespace = true
+
+    set {
+        name  = "apiService.create"
+        value = "true"
+    }
 }
