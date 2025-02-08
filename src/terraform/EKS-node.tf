@@ -19,8 +19,8 @@ resource "aws_eks_node_group" "node-group" {
   }
 
   depends_on = [aws_eks_cluster.eks-cluster]
-#comando será executado localmente, na máquina que está rodando o terraform
-#Máquina que executa o comando precisa estar no contexto do cluster EKS com K8s
+  #comando será executado localmente, na máquina que está rodando o terraform
+  #Máquina que executa o comando precisa estar no contexto do cluster EKS com K8s
   provisioner "local-exec" {
     command = "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
   }
