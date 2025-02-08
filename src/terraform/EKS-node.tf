@@ -5,7 +5,6 @@ resource "aws_eks_node_group" "node-group" {
   node_role_arn = data.aws_iam_role.labrole.arn
   subnet_ids    = module.vpc.private_subnets
 
-
   instance_types = [var.instanceType]
 
   # t3.medium tem 2 vcpu e 4gb de ram cada.
@@ -19,19 +18,11 @@ resource "aws_eks_node_group" "node-group" {
     min_size     = 2 #(500*3)+(250*3) = 2250m = 2.25 vcpu
   }
 
+  depends_on = [aws_eks_cluster.eks-cluster]
+#comando será executado localmente, na máquina que está rodando o terraform
+#Máquina que executa o comando precisa estar no contexto do cluster EKS com K8s
+  provisioner "local-exec" {
+    command = "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+  }
 }
 
-resource "helm_release" "metrics_server" {
-    name = "metrics-server"
-
-    repository       = "https://charts.bitnami.com/bitnami"
-    chart            = "metrics-server"
-    namespace        = "metrics-server"
-    version          = "7.3.4"
-    create_namespace = true
-
-    set {
-        name  = "apiService.create"
-        value = "true"
-    }
-}
