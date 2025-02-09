@@ -18,11 +18,11 @@ resource "aws_eks_node_group" "node-group" {
     min_size     = 2 #(500*3)+(250*3) = 2250m = 2.25 vcpu
   }
 
-  depends_on = [aws_eks_cluster.eks-cluster]
+  # depends_on = [aws_eks_cluster.eks-cluster]
   #comando será executado localmente, na máquina que está rodando o terraform
   #Máquina que executa o comando precisa estar no contexto do cluster EKS com K8s
-  provisioner "local-exec" {
-    command = "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
-  }
+  # provisioner "local-exec" {
+  #   command = "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+  # }
 }
 
