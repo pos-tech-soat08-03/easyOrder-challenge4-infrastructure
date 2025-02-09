@@ -102,6 +102,13 @@ jobs:
       working-directory: src/terraform
       run: terraform apply -auto-approve
 
+      
+    - name: Extract EKS Cluster Name 
+      id: extract-cluster-name
+      run: | 
+        CLUSTER_NAME=$(jq -r '.outputs.easyorder_cluster_name.value' terraform_infrastructure.json)
+        echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_OUTPUT
+
     - name: Update kubeconfig 
       run: | 
         aws eks update-kubeconfig --name ${{ steps.extract-cluster-name.outputs.CLUSTER_NAME }} --region ${{ github.event.inputs.aws_region }}
