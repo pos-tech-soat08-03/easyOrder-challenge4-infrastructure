@@ -1,5 +1,7 @@
-
 # Repositório dedicado para Infraestrutura (Terraform)
+
+## Tech Challenge POS TECH SOAT8 FIAP - Grupo 03 (Fase 4)
+
 - Inclui a infraestrutura necessária para o desafio 4, com a criação de recursos na AWS
   
   - Infraestrutura como código (IaC) com Terraform
