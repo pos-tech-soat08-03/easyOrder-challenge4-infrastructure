@@ -1,4 +1,3 @@
-# configuração do backend dinamico ******
 # considera info do arquivo backend.tfvars
 terraform {
   backend "s3" {
