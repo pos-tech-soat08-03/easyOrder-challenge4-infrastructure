@@ -101,3 +101,12 @@ jobs:
         TF_VAR_accountIdVoclabs: ${{ github.event.inputs.aws_account_id }}
       working-directory: src/terraform
       run: terraform apply -auto-approve
+
+    - name: Update kubeconfig 
+      run: | 
+        aws eks update-kubeconfig --name ${{ steps.extract-cluster-name.outputs.CLUSTER_NAME }} --region ${{ github.event.inputs.aws_region }}
+    
+    - name: Deploy no EKS metrics-server
+      working-directory: manifesto_kubernetes/ 
+      run: |
+        kubectl apply -f components.yaml
