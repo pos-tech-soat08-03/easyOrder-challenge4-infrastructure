@@ -101,12 +101,16 @@ jobs:
         TF_VAR_accountIdVoclabs: ${{ github.event.inputs.aws_account_id }}
       working-directory: src/terraform
       run: terraform apply -auto-approve
-
       
+    - name: Save Terraform Output to JSON
+      working-directory: src/terraform
+      run: terraform output -json > terraform_infrastructure.json
+
     - name: Extract EKS Cluster Name 
       id: extract-cluster-name
+      working-directory: src/terraform
       run: | 
-        CLUSTER_NAME=$(jq -r '.outputs.easyorder_cluster_name.value' terraform_infrastructure.json)
+        CLUSTER_NAME=$(jq -r '.easyorder_cluster_name.value' terraform_infrastructure.json)
         echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_OUTPUT
 
     - name: Update kubeconfig 
