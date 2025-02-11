@@ -91,31 +91,23 @@ jobs:
       working-directory: src/terraform
       run: terraform apply -auto-approve
       
-    - name: Save Terraform Output to JSON
+    - name: Extract cluster name from Terraform Output
+      id: extract-cluster-name
       working-directory: src/terraform
       run: | 
-        terraform output -json > terraform_infrastructure.json
-        cat terraform_infrastructure.json
-        echo "CLUSTER_NAME=easyorder"
-        echo "CLUSTER_NAME=easyorder" >> $GITHUB_OUTPUT
-
-    #- name: Extract EKS Cluster Name 
-    #  id: extract-cluster-name
-    #  working-directory: src/terraform
-    #  run: | 
-    #    CLUSTER_NAME=$(jq -r '.easyorder_cluster_name.value' terraform_infrastructure.json)
-    #    echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_OUTPUT
+        CLUSTER_NAME=$(terraform output -json | jq -r '.easyorder_cluster_name.value')
+        echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_OUTPUT
 
     - name: Update kubeconfig 
       run: | 
         aws eks update-kubeconfig --name ${{ steps.extract-cluster-name.outputs.CLUSTER_NAME }} --region ${{ github.event.inputs.aws_region }}
     
     - name: Install Metrics Server CRDs
-      working-directory: manifesto_kubernetes/
+      working-directory: src/terraform
       run: |
         kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
     # - name: Deploy no EKS metrics-server
-    #   working-directory: manifesto_kubernetes/ 
+    #   working-directory: src/terraform
     #   run: |
     #     kubectl apply -f components.yaml
