@@ -96,9 +96,8 @@ jobs:
       run: | 
         terraform output -json > terraform_infrastructure.json
         cat terraform_infrastructure.json
-        CLUSTER_NAME=$(jq -r '.easyorder_cluster_name.value' < terraform_infrastructure.json)
-        echo "CLUSTER_NAME=$CLUSTER_NAME"
-        echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_OUTPUT
+        echo "CLUSTER_NAME=easyorder"
+        echo "CLUSTER_NAME=easyorder" >> $GITHUB_OUTPUT
 
     #- name: Extract EKS Cluster Name 
     #  id: extract-cluster-name
