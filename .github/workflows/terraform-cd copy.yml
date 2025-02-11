@@ -1,9 +1,12 @@
-name: Terraform CD - Deploy Infraestrutura
+name: Terraform CD - Deploy Infraestrutura (s3 existente)
 
 # Workflow para deploy de infraestrutura com Terraform, config do disparo manual
 on: 
   workflow_dispatch:
     inputs:
+      s3_bucket_name:
+        description: 'Terraform s3 Bucket Name'
+        required: true
       aws_access_key_id:
         description: 'AWS Access Key ID'
         required: true
@@ -58,33 +61,19 @@ jobs:
         
     - name: Verificar Credenciais AWS
       run: aws sts get-caller-identity
-
-    - name: Cria Bucker S3 de configuração do Terraform e captura o nome para variável de ambiente
-      id: create_bucket
-      run: |
-        OUTPUT=$(aws s3api create-bucket \
-          --bucket terraform-state-easyorder-$(uuidgen | tr -d - | tr '[:upper:]' '[:lower:]') \
-          --region us-east-1)
-    
-        LOCATION=$(echo "$OUTPUT" | jq -r '.Location | ltrimstr("/")')
-        echo "bucket_name=$LOCATION" >> $GITHUB_OUTPUT
-    
-    - name: Mostre o nome do bucket criado
-      run: |
-        echo "Bucket de Configuração do Terraform: ${{ steps.create_bucket.outputs.bucket_name }}"
       
     - name: Gerar arquivo backend.tfvars
       working-directory: src/terraform
       run: |
           cat <<EOF > backend.tfvars
-          bucket = "${{ steps.create_bucket.outputs.bucket_name }}"
+          bucket = "${{ github.event.inputs.s3_bucket_name }}"
           key    = "easyorder-infra/terraform.tfstate"
           region = "${{ github.event.inputs.aws_region }}"
           EOF
 
     - name: Terraform Init
       working-directory: src/terraform
-      run: terraform init -backend-config=backend.tfvars
+      run: terraform init -backend-config=backend.tfvars -reconfigure
 
     - name: Terraform Validate
       working-directory: src/terraform
